@@ -1,7 +1,7 @@
-import StartSection from "./assets/components/Home/StartSection"
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import Navbar from "./assets/components/Home/Navbar";
+import Navbar from './components/Navbar';
+import Links from './routes/Links';
 
 
 const theme = createTheme({
@@ -29,7 +29,7 @@ function App() {
      <ThemeProvider theme={theme}>
       <CssBaseline />
       <Navbar />
-      <StartSection/>
+      <Links />
       </ThemeProvider>
     </>
   )
