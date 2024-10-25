@@ -1,13 +1,14 @@
 import StartSection from "./assets/components/Home/StartSection"
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import Navbar from "./assets/components/Home/Navbar";
 
 
 const theme = createTheme({
   palette: {
     mode: 'light', // Change to 'dark' for dark mode
     primary: {
-      main: '#3B00B9', // Customize primary color
+      main: '#7678ed', // Customize primary color
     },
     secondary: {
       main: '#dc004e', // Customize secondary color
@@ -27,6 +28,7 @@ function App() {
     <>
      <ThemeProvider theme={theme}>
       <CssBaseline />
+      <Navbar />
       <StartSection/>
       </ThemeProvider>
     </>
