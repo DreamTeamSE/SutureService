@@ -20,4 +20,4 @@ Follow these steps to install and set up SutureService:
 
 You have successfully installed SutureService!
 
-You can now open the web at with the local adress in the terminal!
+You can now open the web app with the local address in the terminal!
