@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 
 
-const StartSection = () => {
+const SyncDevice = () => {
   return (
     <>
     <Box sx={{
@@ -24,4 +24,4 @@ const StartSection = () => {
   )
 }
 
-export default StartSection
+export default SyncDevice
