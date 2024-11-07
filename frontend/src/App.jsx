@@ -1,8 +1,8 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import Navbar from './components/Navbar';
+import Navbar from './components/ui-components/Navbar';
 import Links from './routes/Links';
-
+import { BrowserRouter as Router } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
@@ -26,11 +26,13 @@ function App() {
 
   return (
     <>
+    <Router>
      <ThemeProvider theme={theme}>
       <CssBaseline />
       <Navbar />
       <Links />
       </ThemeProvider>
+    </Router>
     </>
   )
 }

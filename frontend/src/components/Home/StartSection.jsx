@@ -2,6 +2,7 @@ import React from 'react'
 import Button  from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 
 const StartSection = () => {
@@ -16,9 +17,11 @@ const StartSection = () => {
         marginTop: '64px' 
       }}>
         <Typography variant='h4'>Making Sutures Services Safer</Typography>
-        <Button variant="contained" color="primary" sx={{width: "256px", marginTop: "32px"}}>
-           <Typography variant='h6'>Start</Typography>
-        </Button>
+        <Link to="/start" style={{ textDecoration: 'none', color:"white" }}>
+          <Button variant="contained" color="primary" sx={{width: "256px", marginTop: "32px"}}>
+              <Typography variant='h6'>Start</Typography>
+          </Button>
+        </Link>
     </Box>
     </>
   )
