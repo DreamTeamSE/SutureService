@@ -1,11 +1,15 @@
-import Metrics from '../DTOs/Metrics'
+import Metrics from '../DTOs/Metrics';
+
+const API_BASE_URL = import.meta.env.VITE_FASTAPI_IP;
 
 const pullVelocity = async () => {
   try {
-    const response = await fetch('http://localhost:8000/recent/velocity');
+    console.log(API_BASE_URL)
+    const response = await fetch(`${API_BASE_URL}/recent/velocity`);
     const data = await response.json();
     return new Metrics(data.top, data.average, data.errors, data.points);
   } catch (error) {
+    
     console.error('Error fetching velocity data:', error);
     return new Metrics(); // Return an empty Metrics object or provide default values
   }
@@ -13,7 +17,7 @@ const pullVelocity = async () => {
 
 const pullAcceleration = async () => {
   try {
-    const response = await fetch('http://localhost:8000/recent/acceleration');
+    const response = await fetch(`${API_BASE_URL}/recent/acceleration`);
     const data = await response.json();
     return new Metrics(data.top, data.average, data.errors, data.points);
   } catch (error) {
