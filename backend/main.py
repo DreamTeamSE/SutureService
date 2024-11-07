@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from DTOs.Metrics import Metrics
+import random
 
 app = FastAPI()
 
@@ -19,10 +20,20 @@ def read_root():
 
 @app.get("/recent/velocity")
 def get_velocity():
-    metrics = Metrics(5, 0, 1, [1, 2, 3, 4, 5])
+    metrics = Metrics(
+        top=random.randint(1, 10),
+        average=random.randint(0, 10),
+        errors=random.randint(0, 5),
+        points=[random.randint(0, 10) for _ in range(random.randint(6, 50))]
+    )
     return metrics
 
 @app.get("/recent/acceleration")
 def get_acceleration():
-    metrics = Metrics(10, 0, 1, [1, 2, 3, 4, 4, 0, 0, 0])
+    metrics = Metrics(
+        top=random.randint(1, 15),
+        average=random.randint(0, 10),
+        errors=random.randint(0, 5),
+        points=[random.randint(0, 10) for _ in range(random.randint(1, 10))]
+    )
     return metrics
