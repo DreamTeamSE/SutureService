@@ -1,20 +1,20 @@
 import React from 'react'
 import { Box, Button, Typography } from '@mui/material'
-const StartComponent = (props) => {
+const EndComponent = (props) => {
 
-  let startAssessment = () => {
-    props.handleStart()
+  let stopAssessment = () => {
+    props.handleStop()
   }
   return (
     <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <Typography variant="h5"  sx={{fontSize: "32px"}}>Start Assessment</Typography>
+        <Typography variant="h5"  sx={{fontSize: "32px"}}>Stop Assessment</Typography>
             <Button onClick={() => {
-                startAssessment()
+                stopAssessment()
                 }} variant="contained" sx={{marginBlock: "32px", height: "55px", width: "150px"}}>
-                <Typography variant="p" sx={{fontSize: "20px"}}>Start</Typography>
+                <Typography variant="p" sx={{fontSize: "20px"}}>Stop</Typography>
             </Button>
     </Box>
   )
 }
 
-export default StartComponent
+export default EndComponent
