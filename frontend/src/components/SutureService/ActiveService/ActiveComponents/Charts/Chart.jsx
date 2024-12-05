@@ -12,7 +12,7 @@ import {
   Legend,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns'; // Required to use date-fns adapter for date formatting
-import Status from '../../DTOs/Status';
+import Status from '../../../../../DTOs/Status'
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, TimeScale, LineElement, PointElement, Title, Tooltip, Legend);

@@ -8,10 +8,10 @@ import AccelerationComponent from './ActiveComponents/Metrics/AccelerationCompon
 import RatingComponent from './ActiveComponents/Metrics/RatingComponent';
 import VelocityChart from './ActiveComponents/Charts/Chart';
 import EndComponent from './ActiveComponents/Metrics/EndComponent';
-import Status from './DTOs/Status'
+import Status from '../../../DTOs/Status'
 import Chart from './ActiveComponents/Charts/Chart';
-import Metrics from './DTOs/Metrics'
-import { pullAcceleration, pullVelocity } from './ActiveServiceHelpers/metricsHelper';
+import Metrics from '../../../DTOs/Metrics'
+import { pullAcceleration, pullVelocity } from '../../../helpers/ActiveServiceHelpers/metricsHelper';
 
 const ActiveService = () => {
 

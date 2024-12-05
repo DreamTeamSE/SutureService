@@ -1,4 +1,4 @@
-import Metrics from '../DTOs/Metrics';
+import Metrics from '../../DTOs/Metrics'
 
 const API_BASE_URL = import.meta.env.VITE_FASTAPI_IP;
 
