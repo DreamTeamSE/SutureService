@@ -13,9 +13,14 @@ import Chart from './ActiveComponents/Charts/Chart';
 import Metrics from '../../../DTOs/Metrics'
 import { pullAcceleration, pullVelocity } from '../../../helpers/ActiveServiceHelpers/metricsHelper';
 
-const ActiveService = () => {
+const ActiveService = (props) => {
 
   const [selected, setSelected] = useState(Status.START)
+
+  const [deviceID, setDeviceID] = useState(0)
+  const [userID, setUserID] = useState(0)
+
+
 
   let handleSelect = async (select) => {
     await getMetrics(select)
@@ -27,17 +32,21 @@ const ActiveService = () => {
     setSelected(Status.VELOCITY)
   }
 
-  let handleStart = () => {
-
+  let handleStart = (deviceID, userID) => {
+    setDeviceID(deviceID)
+    setUserID(userID)
     setSelected(Status.STARTED)
   }
 
+  
+
   let getMetrics = async (selected) => {
     let newMetrics = metrics
+
     if (selected === Status.ACCELERATION) {
-      newMetrics = await pullAcceleration()
+      newMetrics = await pullAcceleration(deviceID, userID)
     } else if (selected === Status.VELOCITY) {
-      newMetrics = await pullVelocity()
+      newMetrics = await pullVelocity(deviceID, userID)
     } 
     setMetrics(newMetrics)
 }

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from DTOs.Metrics import Metrics
+from DTOs.Subscribe import Subscribe
 import random
 
 app = FastAPI()
@@ -17,6 +18,30 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the FastAPI server!"}
+
+@app.post("/subscribe")
+def subscribe(subscribe: Subscribe):
+    # TODO: Start stroing this units data in a database with start time and consider endtime when unsubscribing
+    return "Subscribed"
+
+@app.post("/unsubscribe")
+def unsubscribe(subscribe: Subscribe):
+    print(subscribe)
+    acceleration = Metrics(
+        top=random.randint(1, 10),
+        average=random.randint(0, 10),
+        errors=random.randint(0, 5),
+        points=[random.randint(0, 10) for _ in range(random.randint(6, 50))]
+    )
+
+    velocity = Metrics(
+        top=random.randint(1, 10),
+        average=random.randint(0, 10),
+        errors=random.randint(0, 5),
+        points=[random.randint(0, 10) for _ in range(random.randint(6, 50))]
+    )
+
+    return {"acceleration" : acceleration, "velocity" : velocity}
 
 @app.get("/recent/velocity")
 def get_velocity():
