@@ -4,13 +4,11 @@ services:
   suture-backend:
     image: suture-backend
     build:
-      contes xt: ..
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
     depends_on:
       - db
-
   db:
     image: postgres:13
     environment:

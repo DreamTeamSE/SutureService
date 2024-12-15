@@ -1,9 +1,10 @@
-from services.ControllerService import ControllerService
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from DTOs.Metrics import Metrics
-from DTOs.Subscribe import Subscribe
+from DTOs.Control import Control
+from services.ControllerManager import ControllerManager
 import random
+import httpx
 
 app = FastAPI()
 
@@ -16,34 +17,30 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
+manager = ControllerManager()
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the FastAPI server!"}
 
-@app.post("/subscribe")
-def subscribe(subscribe: Subscribe):
-    # TODO: Start stroing this units data in a database with start time and consider endtime when unsubscribing
-    controllerService = ControllerService(subscribe.id, subscribe.userID)
-    controllerService.startCollection()
-    return "Subscribed"
+@app.post("/control")
+def controlAction(control: Control):
+    # TODO: Start storing this unit's data in a database with start time and consider endtime when unsubscribing
+    addr = manager.getAddr(control.deviceID)
+    path = "device/control"
+    print(addr)
 
-@app.post("/unsubscribe")
-def unsubscribe(subscribe: Subscribe):
-    controllerService = ControllerService(subscribe.id, subscribe.userID)
-    controllerService.stopCollection()
     
-    acceleration = Metrics(
-        top=random.randint(1, 10),
-        average=random.randint(0, 10),
-        errors=random.randint(0, 5),
-        points=[random.randint(0, 10) for _ in range(random.randint(6, 50))]
-    )
-
-    velocity = Metrics(
-        top=random.randint(1, 10),
-        average=random.randint(0, 10),
-        errors=random.randint(0, 5),
-        points=[random.randint(0, 10) for _ in range(random.randint(6, 50))]
-    )
-
-    return {"acceleration" : acceleration, "velocity" : velocity}
+    # Make a POST request to the addr
+    try:
+        response = httpx.post(addr + "/" + path, json={"action" : control.action})  # Replace with actual data
+        response.raise_for_status()  # Raise an error for bad responses
+        res = response.json()  # Assuming the response is JSON
+    except httpx.HTTPStatusError as e:
+        return {"message": "Failed", "error": str(e)}
+    except Exception as e:
+        return {"message": "Failed", "error": str(e)}
+    if "data" in res:
+        return {"message": "Success", "res": res["data"]}
+    else:
+        return {"message": "Success"}

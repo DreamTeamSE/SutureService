@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from strategies.DeviceStrategyFactory import DeviceStrategyFactory
 from Device.Device import Device
+import uvicorn
 
 app = FastAPI()
 device = Device("123")
@@ -18,3 +19,5 @@ def controlDevice(control: DeviceControl):
     
     return strategy.execute(device)
 
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8080)

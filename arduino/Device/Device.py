@@ -5,7 +5,7 @@ class Device:
     def __init__(self, id):
         self.is_running = False
         self.is_paused = False
-        self.velocity = []
+        self.data = []
         self.id = id
         
     def start(self):
@@ -19,10 +19,12 @@ class Device:
 
     def stop(self):
         self.is_running = False
-        return self.velocity
 
     def addToCache(self, val):
-        self.velocity.append(val)
+        self.data.append(val)
+    
+    def getData(self):
+        return self.data
         
 
     def clearCache(self):
@@ -36,7 +38,7 @@ class Device:
             try:
                 val = randint(1, 10)
                 self.addToCache(val)
-                print(self.velocity)
+                print(self.data)
                 while self.is_paused and self.is_running:
                     sleep(.5)
                 sleep(.5)
@@ -44,4 +46,3 @@ class Device:
             except Exception as e:
                 print(f"Error in device {self.id}: {str(e)}")
                 self.stop()
-        self.clearCache()
