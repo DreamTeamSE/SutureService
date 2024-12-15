@@ -25,17 +25,16 @@ def read_root():
 
 @app.post("/control")
 def controlAction(control: Control):
-    # TODO: Start storing this unit's data in a database with start time and consider endtime when unsubscribing
     addr = manager.getAddr(control.deviceID)
     path = "device/control"
     print(addr)
 
     
-    # Make a POST request to the addr
+
     try:
-        response = httpx.post(addr + "/" + path, json={"action" : control.action})  # Replace with actual data
-        response.raise_for_status()  # Raise an error for bad responses
-        res = response.json()  # Assuming the response is JSON
+        response = httpx.post(addr + "/" + path, json={"action" : control.action}) 
+        response.raise_for_status()  
+        res = response.json()  
     except httpx.HTTPStatusError as e:
         return {"message": "Failed", "error": str(e)}
     except Exception as e:
