@@ -1,3 +1,4 @@
+from services.ControllerService import ControllerService
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from DTOs.Metrics import Metrics
@@ -22,11 +23,15 @@ def read_root():
 @app.post("/subscribe")
 def subscribe(subscribe: Subscribe):
     # TODO: Start stroing this units data in a database with start time and consider endtime when unsubscribing
+    controllerService = ControllerService(subscribe.id, subscribe.userID)
+    controllerService.startCollection()
     return "Subscribed"
 
 @app.post("/unsubscribe")
 def unsubscribe(subscribe: Subscribe):
-    print(subscribe)
+    controllerService = ControllerService(subscribe.id, subscribe.userID)
+    controllerService.stopCollection()
+    
     acceleration = Metrics(
         top=random.randint(1, 10),
         average=random.randint(0, 10),
@@ -42,23 +47,3 @@ def unsubscribe(subscribe: Subscribe):
     )
 
     return {"acceleration" : acceleration, "velocity" : velocity}
-
-@app.get("/recent/velocity")
-def get_velocity():
-    metrics = Metrics(
-        top=random.randint(1, 10),
-        average=random.randint(0, 10),
-        errors=random.randint(0, 5),
-        points=[random.randint(0, 10) for _ in range(random.randint(6, 50))]
-    )
-    return metrics
-
-@app.get("/recent/acceleration")
-def get_acceleration():
-    metrics = Metrics(
-        top=random.randint(1, 15),
-        average=random.randint(0, 10),
-        errors=random.randint(0, 5),
-        points=[random.randint(0, 10) for _ in range(random.randint(1, 10))]
-    )
-    return metrics
