@@ -46,9 +46,7 @@ def controlAction(control: Control):
         return {"message": "Success"}
     
 
-
-
-@app.post("user/add")
+@app.post("/user/add")
 def addUser(user: User):
     userService = UserService()
     userService.addUser(user)

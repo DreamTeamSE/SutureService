@@ -1,1 +1,1 @@
-docker build -t suture-backend . 
+docker build -t app . 
