@@ -3,10 +3,11 @@ from app.db.Database import Database
 class UserService:
     def __init__(self):
         self.db = Database()
-    def getUser(self, id):
+        
+    def getUser(self, email):
         conn = self.db.getConnection()
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM users WHERE id = %s", (id,))
+        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
         user = cursor.fetchone()
         self.db.closeConnection(conn)
         return user

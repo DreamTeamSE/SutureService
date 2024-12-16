@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.DTOs.Metrics import Metrics
 from app.DTOs.Control import Control
@@ -51,3 +51,13 @@ def addUser(user: User):
     userService = UserService()
     userService.addUser(user)
     return {"message": "User added successfully"}
+
+
+@app.get("/user/get/")
+def getUser(email: str):
+    userService = UserService()
+    user = userService.getUser(email)
+    if user:
+        return {"message": "User added successfully", "user": user}
+    else:
+        return {"message": "User not found"}
