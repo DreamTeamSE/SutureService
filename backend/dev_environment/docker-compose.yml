@@ -1,19 +1,26 @@
-version: '3.8'
-
+version: '3.9'
 services:
-  suture-backend:
+  app:
     image: suture-backend
-    build:
-      dockerfile: Dockerfile
+    container_name: app
     ports:
       - "8000:8000"
     depends_on:
       - db
+    networks:
+      - app-network
+
   db:
-    image: postgres:13
+    image: postgres:latest
+    container_name: db
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
       POSTGRES_DB: suturedb
-    ports:
-      - "5432:5432"
+    networks:
+      - app-network
+
+networks:
+  app-network:

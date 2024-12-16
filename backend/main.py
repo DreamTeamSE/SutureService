@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from DTOs.Metrics import Metrics
-from DTOs.Control import Control
-from services.ControllerManager import ControllerManager
+from app.DTOs.Metrics import Metrics
+from app.DTOs.Control import Control
+from app.DTOs.User import User
+from app.services.ControllerManager import ControllerManager
+from app.db.Database import Database
+from app.services.Users.UserService import UserService
 import random
 import httpx
 
@@ -18,6 +21,7 @@ app.add_middleware(
 )
 
 manager = ControllerManager()
+DB = Database()
 
 @app.get("/")
 def read_root():
@@ -28,9 +32,6 @@ def controlAction(control: Control):
     addr = manager.getAddr(control.deviceID)
     path = "device/control"
     print(addr)
-
-    
-
     try:
         response = httpx.post(addr + "/" + path, json={"action" : control.action}) 
         response.raise_for_status()  
@@ -43,3 +44,12 @@ def controlAction(control: Control):
         return {"message": "Success", "res": res["data"]}
     else:
         return {"message": "Success"}
+    
+
+
+
+@app.post("user/add")
+def addUser(user: User):
+    userService = UserService()
+    userService.addUser(user)
+    return {"message": "User added successfully"}
