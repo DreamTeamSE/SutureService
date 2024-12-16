@@ -16,9 +16,7 @@ services:
       timeout: 5s
       retries: 5
   app:
-    build:
-      context: ..
-      dockerfile: Dockerfile
+    image: app
     container_name: app
     depends_on:
       db:
