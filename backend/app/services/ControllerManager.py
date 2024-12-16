@@ -8,7 +8,7 @@ class ControllerManager:
 
     def __init__(self):
         if not hasattr(self, 'deviceMap'):
-            self.deviceMap = dict({"123" : "http://localhost:8080"})
+            self.deviceMap = dict({"123" : "http://host.docker.internal:8080"})
 
     def getAddr(self, id):
         if id in self.deviceMap:

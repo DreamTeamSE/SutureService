@@ -20,4 +20,4 @@ def controlDevice(control: DeviceControl):
     return strategy.execute(device)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8080)
+    uvicorn.run(app, host="172.16.227.89", port=8080)
