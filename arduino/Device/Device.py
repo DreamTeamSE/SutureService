@@ -5,7 +5,7 @@ class Device:
     def __init__(self, id):
         self.is_running = False
         self.is_paused = False
-        self.data = []
+        self.data = {"velocity": [], "acceleration": []}
         self.id = id
         
     def start(self):
@@ -20,15 +20,16 @@ class Device:
     def stop(self):
         self.is_running = False
 
-    def addToCache(self, val):
-        self.data.append(val)
+    def addToCache(self, vel, acc):
+        self.data["velocity"].append(vel)
+        self.data["acceleration"].append(acc)
     
     def getData(self):
         return self.data
         
 
     def clearCache(self):
-        self.data = []
+        self.data = {"velocity": [], "acceleration": []}
     
 
     
@@ -36,8 +37,9 @@ class Device:
         print(f"Device {self.id} started running")
         while self.is_running:
             try:
-                val = randint(1, 10)
-                self.addToCache(val)
+                randomVel = randint(1, 10)
+                randomAcc = randint(1, 10)
+                self.addToCache(randomVel, randomAcc)
                 print(self.data)
                 while self.is_paused and self.is_running:
                     sleep(.5)
