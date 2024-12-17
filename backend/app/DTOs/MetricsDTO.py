@@ -1,7 +1,7 @@
 from typing import List
 from pydantic import BaseModel
 
-class Metrics(BaseModel):
+class MetricsDTO(BaseModel):
     email: str
     velocity_list: List[float]
     acceleration_list: List[float]
