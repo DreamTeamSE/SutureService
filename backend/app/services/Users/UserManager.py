@@ -1,4 +1,3 @@
-from app.db.Database import Database
 import hashlib
 
 class UserManager:

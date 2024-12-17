@@ -11,6 +11,7 @@ class ControllerManager:
             self.deviceMap = dict({"123" : "http://host.docker.internal:8080"})
 
     def getAddr(self, id):
+        print(self.deviceMap)
         if id in self.deviceMap:
             return self.deviceMap[id]
         else:

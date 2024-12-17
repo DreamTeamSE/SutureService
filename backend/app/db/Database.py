@@ -12,8 +12,8 @@ class Database:
         if not hasattr(self, 'pool'):
             self.pool = SimpleConnectionPool(1, 50, user="admin", password="admin", host="db", port=5432, database="suturedb")
 
-    def getConnection(self):
+    def get_connection(self):
         return self.pool.getconn()
 
-    def closeConnection(self, conn):
+    def close_connection(self, conn):
         self.pool.putconn(conn)

@@ -7,7 +7,7 @@ class StopStrategy(DeviceStrategy):
         if device.is_running:
             device.stop()
             output = device.getData()
-            device.clearCache()
+            device.newCache()
             return {
                 "message": "Training stopped",
                 "metrics": output,
