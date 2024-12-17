@@ -1,4 +1,4 @@
-from .DeviceStrategy import DeviceStrategy
+from .DeviceStrategy import DeviceStrategy, Response
 from Device.Device import Device
 
 
@@ -8,12 +8,5 @@ class StopStrategy(DeviceStrategy):
             device.stop()
             output = device.getData()
             device.newCache()
-            return {
-                "message": "Training stopped",
-                "metrics": output,
-                "status": "success"
-            }
-        return {
-            "message": "Device is not running",
-            "status": "error"
-        } 
+            return Response.success("Training stopped", output)
+        return Response.error("Device is not running") 

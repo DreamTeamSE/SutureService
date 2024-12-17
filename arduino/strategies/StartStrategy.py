@@ -1,6 +1,7 @@
 from threading import Thread
-from .DeviceStrategy import DeviceStrategy
+from .DeviceStrategy import DeviceStrategy, Response
 from Device.Device import Device
+
 
 class StartStrategy(DeviceStrategy):
     def execute(self, device: Device) -> dict:
@@ -9,12 +10,5 @@ class StartStrategy(DeviceStrategy):
             thread = Thread(target=device.run)
             thread.daemon = True
             thread.start()
-            return {
-                "message": "Device started successfully",
-                "metrics": device.getData(),
-                "status": "success"
-            }
-        return {
-            "message": "Device is already running",
-            "status": "error"
-        } 
+            return Response.success("Device started successfully", device.getData())
+        return Response.error("Device is already running") 
