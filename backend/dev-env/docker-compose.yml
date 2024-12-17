@@ -10,11 +10,14 @@ services:
       - "5432:5432"
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U myuser"]
+      test: ["CMD-SHELL", "pg_isready -U admin -d suturedb"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app-net
   app:
     image: app
     container_name: app
@@ -23,4 +26,11 @@ services:
         condition: service_healthy
     ports:
       - "8000:8000"
+    networks:
+      - app-net
 
+volumes:
+  db_data:
+
+networks:
+  app-net:

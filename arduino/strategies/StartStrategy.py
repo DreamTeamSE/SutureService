@@ -7,6 +7,14 @@ class StartStrategy(DeviceStrategy):
         if not device.is_running:
             device.start()
             thread = Thread(target=device.run)
+            thread.daemon = True
             thread.start()
-            return {"status": "Trainning started"}
-        return {"status": "Device is already running"} 
+            return {
+                "message": "Device started successfully",
+                "metrics": device.getData(),
+                "status": "success"
+            }
+        return {
+            "message": "Device is already running",
+            "status": "error"
+        } 

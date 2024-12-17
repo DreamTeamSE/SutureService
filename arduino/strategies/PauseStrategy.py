@@ -3,7 +3,14 @@ from Device.Device import Device
 
 class PauseStrategy(DeviceStrategy):
     def execute(self, device: Device) -> dict:
-        if device.is_running:
+        if device.is_running and not device.is_paused:
             device.pause()
-            return {"status": "Trainning paused"}
-        return {"status": "Device is not running"} 
+            return {
+                "message": "Device paused successfully",
+                "metrics": device.getData(),
+                "status": "success"
+            }
+        return {
+            "message": "Device is not running or already paused",
+            "status": "error"
+        } 

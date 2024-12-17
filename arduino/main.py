@@ -15,9 +15,9 @@ def controlDevice(control: DeviceControl):
     strategy = DeviceStrategyFactory.getStrategy(control.action)
     
     if not strategy:
-        raise HTTPException(status_code=400, detail="Invalid action")
+        raise HTTPException(status="error", detail="Invalid action")
     
     return strategy.execute(device)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8080)
+    uvicorn.run(app, host="172.16.227.89", port=8080)
