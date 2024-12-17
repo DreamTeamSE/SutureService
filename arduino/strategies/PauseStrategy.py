@@ -8,9 +8,9 @@ class PauseStrategy(DeviceStrategy):
             return {
                 "message": "Device paused successfully",
                 "metrics": device.getData(),
-                "status_code": 200
+                "status": "success"
             }
         return {
             "message": "Device is not running or already paused",
-            "status_code": 400
+            "status": "error"
         } 

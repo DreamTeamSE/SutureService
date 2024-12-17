@@ -12,21 +12,19 @@ def get_db():
 def get_user_manager(db: Database = Depends(get_db)):
     return UserManager(db)
 
-@router.post("/add")
-def add_user(
+@router.post("/signup")
+def signup(
     user: UserDTO,
     user_manager: UserManager = Depends(get_user_manager)
 ):
-    user_manager.add_user(user)
-    return {"message": "User added successfully"}
+    login_response = user_manager.signup(user)
+    return login_response
+    
 
-@router.get("/get/email")
-def get_user(
-    email: str,
+@router.post("/login")
+def login(
+    user: UserDTO,
     user_manager: UserManager = Depends(get_user_manager)
 ):
-    user = user_manager.get_user(email)
-    if user:
-        return {"message": "User found", "user": user}
-    else:
-        return {"message": "User not found"} 
+    login_response = user_manager.login(user)
+    return login_response

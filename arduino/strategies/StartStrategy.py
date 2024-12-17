@@ -12,9 +12,9 @@ class StartStrategy(DeviceStrategy):
             return {
                 "message": "Device started successfully",
                 "metrics": device.getData(),
-                "status_code": 200
+                "status": "success"
             }
         return {
             "message": "Device is already running",
-            "status_code": 400
+            "status": "error"
         } 

@@ -8,9 +8,9 @@ class ResumeStrategy(DeviceStrategy):
             return {
                 "message": "Device resumed successfully",
                 "metrics": device.getData(),
-                "status_code": 200
+                "status": "success"
             }
         return {
             "message": "Device is not running or not paused",
-            "status_code": 400
+            "status": "error"
         } 

@@ -11,9 +11,9 @@ class StopStrategy(DeviceStrategy):
             return {
                 "message": "Training stopped",
                 "metrics": output,
-                "status_code": 200
+                "status": "success"
             }
         return {
             "message": "Device is not running",
-            "status_code": 400
+            "status": "error"
         } 
