@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from app.DTOs.ControlDTO import ControlDTO
+from app.DTOs.device.ControlDTO import ControlDTO
 from app.services.ArduinoController.ControlService import ControlService
 from app.services.ArduinoController.ControllerManager import ControllerManager
 from app.services.Metrics.MetricManager import MetricManager
@@ -25,5 +25,5 @@ def control_action(
     control: ControlDTO,
     control_service: ControlService = Depends(get_control_service)
 ):
-
-    return control_service.execute(control)
+    response = control_service.execute(control)
+    return response

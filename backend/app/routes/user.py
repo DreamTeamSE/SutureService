@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from app.DTOs.UserDTO import UserDTO
+from app.DTOs.user.UserDTO import UserDTO
 from app.services.Users.UserManager import UserManager
 from app.db.Database import Database
 

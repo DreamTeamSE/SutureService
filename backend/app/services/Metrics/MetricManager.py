@@ -1,6 +1,6 @@
-from app.DTOs.MetricsDTO import MetricsDTO
-from app.DTOs.DeviceMetricsDTO import DeviceMetricsDTO
-
+from app.DTOs.metrics.MetricsDTO import MetricsDTO
+from app.DTOs.device.DeviceMetricsDTO import DeviceMetricsDTO
+from app.DTOs.metrics.CalculatedMetricsDTO import CalculatedMetricsDTO
 class Response:
     def __init__(self, status, message, metrics=None):
         self.status = status
@@ -35,21 +35,38 @@ class MetricManager:
         finally:
             if conn:
                 self.db.close_connection(conn)
-
-    def create_metric(self, email, device_metric: DeviceMetricsDTO):
+    
+    def calculate_metrics(self, device_metric: DeviceMetricsDTO):
+        if not device_metric.velocity_list or not device_metric.acceleration_list:
+            print("Error: Empty velocity or acceleration list")
+            return None
         try:
             top_velocity = max(device_metric.velocity_list)
             top_acceleration = max(device_metric.acceleration_list)
             average_velocity = round(sum(device_metric.velocity_list) / len(device_metric.velocity_list), 2)
             average_acceleration = round(sum(device_metric.acceleration_list) / len(device_metric.acceleration_list), 2)
-            metric = MetricsDTO(
-                email=email,
-                velocity_list=device_metric.velocity_list,
-                acceleration_list=device_metric.acceleration_list,
+            calculated_metrics = CalculatedMetricsDTO(
                 top_velocity=top_velocity,
                 top_acceleration=top_acceleration,
                 average_velocity=average_velocity,
                 average_acceleration=average_acceleration
+            )
+            return calculated_metrics
+        except ValueError as e:
+            print(f"Error occurred while calculating metrics: {e}")
+            return None
+
+    def create_metric(self, email, device_metric: DeviceMetricsDTO):
+        try:
+            calculated_metrics = self.calculate_metrics(device_metric)
+            metric = MetricsDTO(
+                email=email,
+                velocity_list=device_metric.velocity_list,
+                acceleration_list=device_metric.acceleration_list,
+                top_velocity=calculated_metrics["top_velocity"],
+                top_acceleration=calculated_metrics["top_acceleration"],
+                average_velocity=calculated_metrics["average_velocity"],
+                average_acceleration=calculated_metrics["average_acceleration"]
             )
             return metric
         except (ValueError, ZeroDivisionError) as e:
