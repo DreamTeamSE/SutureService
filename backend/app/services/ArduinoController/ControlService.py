@@ -17,27 +17,28 @@ class ControlService:
         return {"message": "Metrics were Collected and Saved", "metrics": user_metrics}
     
        
-    def execute_control_action(self, control: ControlDTO) -> DeviceMetricsDTO:
+    def execute_control_action(self, control: ControlDTO) -> dict:
         device_domain = self._create_domain(control.device_id)
         device_response = self.execute_given_device_domain(device_domain, control.action)
 
-        if not device_response or not device_response["metrics"]:
+        if not device_response:
             raise ValueError(f"While preforming this action {control.action}, An error occured while executing the action")
         
+        if control.action != "stop":
+                return device_response
         device_metrics = device_response["metrics"]
-
-        if control.action == "stop":
-            return self.handle_device_stopped(control.email, device_metrics)
-        return device_metrics
+        return self.handle_device_stopped(control.email, device_metrics)
+   
 
     
 
-    def execute_given_device_domain(self, domain : str, action : str) -> dict:
+    def execute_given_device_domain(self, domain: str, action: str) -> dict:
         try:
             response = httpx.post(domain, json={"action": action})
+            response.raise_for_status()
             return response.json()
-        except httpx.HTTPStatusError as http_err:
-            raise ValueError("Failed to Reach Device Address")
+        except httpx.HTTPStatusError as e:
+            raise ValueError(f"Failed to Reach Device Address: {e.response.text}")
 
     def _create_domain(self, device_id : str) -> str:
         address = self.controller_manager.getAddr(device_id)

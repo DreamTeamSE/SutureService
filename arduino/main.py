@@ -19,12 +19,11 @@ def controlDevice(control: DeviceControl):
             raise HTTPException(status_code=400, detail="Invalid action: Action not recognized")
         return strategy.execute(device)
     except ValueError as e:
-        error_detail = f"Error has occured during process: {e}"
-        raise HTTPException(status_code=400, detail=error_detail)
+        logging.error(e, exc_info=True)
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        error_detail = f"Internal Server Error: {e}"
-        logging.error(error_detail)
-        raise HTTPException(status_code=500, detail=error_detail)
+        logging.error(e, exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     uvicorn.run(app, host="172.16.227.89", port=8080)

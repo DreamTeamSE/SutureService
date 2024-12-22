@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, Depends, HTTPException
 from app.DTOs.user.UserDTO import UserDTO
 from app.DTOs.user.AuthDTO import AuthDTO
@@ -25,8 +26,10 @@ def signup(
         signup_response = user_service.signup(user)
         return signup_response
     except ValueError as e:
+        logging.error(e, exc_info=True)
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
+        logging.error(e, exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -41,8 +44,10 @@ def login(
             return {"message": "Login was not Successful"}
         return {"message": "Login was successful"}
     except HTTPException as e:
+        logging.error(e, exc_info=True)
         raise e
     except Exception as e:
+        logging.error(e, exc_info=True)
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
 
 @router.delete("/delete")
@@ -54,6 +59,9 @@ def delete_user(
         deletion_response = user_service.delete_user(auth)
         return deletion_response
     except ValueError as e:
+        logging.error(e, exc_info=True)
         raise HTTPException(status_code=400, detail=f"Error Deleting User: {str(e)}")
+        
     except Exception as e:
+        logging.error(e, exc_info=True)
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")

@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, Depends, HTTPException
 from app.DTOs.device.ControlDTO import ControlDTO
 from app.services.ArduinoController.ControlService import ControlService
@@ -32,6 +33,8 @@ def control_action(
     try:
         return control_service.execute_control_action(control)
     except ValueError as e:
+        logging.error(e, exc_info=True)
         raise HTTPException(status_code=400, detail=f"Error Controlling Device : {e}")
     except Exception as e:
+        logging.error(e, exc_info=True)
         raise HTTPException(status_code=500, detail=f"Internal Server Error : {e}")
