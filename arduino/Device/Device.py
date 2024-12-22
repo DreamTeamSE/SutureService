@@ -1,3 +1,4 @@
+import logging
 from time import sleep
 from random import randint
 
@@ -34,17 +35,11 @@ class Device:
 
     
     def run(self):
-        print(f"Device {self.id} started running")
+        sleepVal = 1
         while self.is_running:
-            try:
-                randomVel = round(randint(1, 10) + randint(0, 99) / 100, 2)
-                randomAcc = round(randint(1, 10) + randint(0, 99) / 100, 2)
-                self.addToCache(randomVel, randomAcc)
-                print(self.data)
-                while self.is_paused and self.is_running:
-                    sleep(1)
-                sleep(1)
-               
-            except Exception as e:
-                print(f"Error in device {self.id}: {str(e)}")
-                self.stop()
+            randomVel = round(randint(1, 10) + randint(0, 99) / 100, 2)
+            randomAcc = round(randint(1, 10) + randint(0, 99) / 100, 2)
+            self.addToCache(randomVel, randomAcc)
+            while self.is_paused and self.is_running:
+                sleep(sleepVal)
+            sleep(sleepVal)

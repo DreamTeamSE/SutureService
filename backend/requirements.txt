@@ -4,3 +4,4 @@ pydantic
 httpx
 psycopg2-binary
 bcrypt
+python-dotenv

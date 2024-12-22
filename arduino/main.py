@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from strategies.DeviceStrategyFactory import DeviceStrategyFactory
@@ -12,12 +13,18 @@ class DeviceControl(BaseModel):
 
 @app.post("/device/control")
 def controlDevice(control: DeviceControl):
-    strategy = DeviceStrategyFactory.getStrategy(control.action)
-    
-    if not strategy:
-        raise HTTPException(status="error", detail="Invalid action")
-    
-    return strategy.execute(device)
+    try:
+        strategy = DeviceStrategyFactory.getStrategy(control.action)
+        if not strategy:
+            raise HTTPException(status_code=400, detail="Invalid action: Action not recognized")
+        return strategy.execute(device)
+    except ValueError as e:
+        error_detail = f"Error has occured during process: {e}"
+        raise HTTPException(status_code=400, detail=error_detail)
+    except Exception as e:
+        error_detail = f"Internal Server Error: {e}"
+        logging.error(error_detail)
+        raise HTTPException(status_code=500, detail=error_detail)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="172.16.227.89", port=8080)

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import user, metric, device
+from app.routes import metrics, user, device
+
 
 app = FastAPI()
 
@@ -14,5 +15,5 @@ app.add_middleware(
 )
 
 app.include_router(user.router)
-app.include_router(metric.router)
+app.include_router(metrics.router)
 app.include_router(device.router)
