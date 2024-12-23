@@ -1,2 +1,4 @@
-    pip install fastapi uvicorn
-    uvicorn main:app --reload --port 8080
+pip install fastapi uvicorn
+python -m pip install grpcio
+python -m pip install grpcio-tools
+python main.py

@@ -6,7 +6,7 @@ from app.services.ArduinoController.ControllerManager import ControllerManager
 from app.DAOs.MetricDAO import MetricDAO
 from app.services.Metrics.MetricsService import MetricsService
 from app.db.Database import Database
-
+from app.repository.DeviceRepository import DeviceRepository
 router = APIRouter(prefix="/device", tags=["device"])
 
 def get_db():
@@ -18,9 +18,13 @@ def get_metric_dao(db: Database = Depends(get_db)):
 def get_metrics_service(metric_dao: MetricDAO = Depends(get_metric_dao)):
     return MetricsService(metric_dao)
 
-def get_control_manager():
-    return ControllerManager()
 
+def get_device_repository():
+    return DeviceRepository()
+
+
+def get_control_manager(device_repo : DeviceRepository = Depends(get_device_repository)):
+    return ControllerManager(device_repo)
 
 def get_control_service(control_manager: ControllerManager = Depends(get_control_manager), metric_service: MetricsService = Depends(get_metrics_service)):
     return ControlService(control_manager, metric_service)

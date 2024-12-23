@@ -14,7 +14,7 @@ class ControlService:
         extracted_metrics = self._extract_device_metrics(device_metrics)
         user_metrics = self.metrics_service.create_metrics(email, extracted_metrics)
         self.metrics_service.save_metrics(user_metrics)
-        return {"message": "Metrics were Collected and Saved", "metrics": user_metrics}
+        return {"message": "Metrics were Collected and Saved"}
     
        
     def execute_control_action(self, control: ControlDTO) -> dict:
@@ -26,30 +26,29 @@ class ControlService:
         
         if control.action != "stop":
                 return device_response
-        device_metrics = device_response["metrics"]
-        return self.handle_device_stopped(control.email, device_metrics)
+        return self.handle_device_stopped(control.email, device_response)
    
 
     
 
     def execute_given_device_domain(self, domain: str, action: str) -> dict:
         try:
-            response = httpx.post(domain, json={"action": action})
-            response.raise_for_status()
-            return response.json()
+
+            response = self.controller_manager.control_device(domain, action)
+            return response
         except httpx.HTTPStatusError as e:
             raise ValueError(f"Failed to Reach Device Address: {e.response.text}")
 
     def _create_domain(self, device_id : str) -> str:
         address = self.controller_manager.getAddr(device_id)
-        return f"{address}/device/control"
+        return f"{address}"
 
-    def _extract_device_metrics(self, device_metrics : DeviceMetricsDTO) -> DeviceMetricsDTO:
-        if not device_metrics["velocity_list"]:
+    def _extract_device_metrics(self, device_response : dict) -> DeviceMetricsDTO:
+        if not device_response["velocity_list"]:
             raise ValueError("Device Velocity List Is Empty")
-        if not device_metrics["acceleration_list"]:
+        if not device_response["acceleration_list"]:
             raise ValueError("Device Acceleration List Is Empty")
         
-        velocity_list = device_metrics["velocity_list"]
-        acceleration_list = device_metrics["acceleration_list"]
+        velocity_list = device_response["velocity_list"]
+        acceleration_list = device_response["acceleration_list"]
         return DeviceMetricsDTO(velocity_list=velocity_list, acceleration_list=acceleration_list)

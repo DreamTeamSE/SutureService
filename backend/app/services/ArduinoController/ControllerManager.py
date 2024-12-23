@@ -1,17 +1,24 @@
 import logging
-
+from app.repository.DeviceRepository import DeviceRepository
 
 class ControllerManager:
     _instance = None
 
-    def __new__(cls, *args, **kwargs) -> 'ControllerManager':
-        if not cls._instance:
-            cls._instance = super(ControllerManager, cls).__new__(cls, *args, **kwargs)
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super(ControllerManager, cls).__new__(cls)
+
         return cls._instance
 
-    def __init__(self) -> None:
+    def __init__(self, device_repo : DeviceRepository) -> None:
         if not hasattr(self, 'deviceMap'):
-            self.deviceMap = dict({"123" : "http://host.docker.internal:8080"})
+            self.deviceMap = dict({"123" : "host.docker.internal:50051"})
+        self.device_repo = device_repo
+
+    def control_device(self, domain : str, action : str):
+        return self.device_repo.control_device(domain, action)
+        
+    
 
     def getAddr(self, id) -> str:
         if id in self.deviceMap:

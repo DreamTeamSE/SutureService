@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.device";
+option java_outer_classname = "device";
+option objc_class_prefix = "D";
+
+package device;
+
+service ControlDevice {
+    // Sends a greeting
+    rpc Control (ControlRequest) returns (ControlResponse) {}
+  }
+  
+
+  message ControlRequest {
+    string control = 1;
+  }
+
+  message ControlResponse {
+    string message = 1;
+
+    message Metrics {
+        repeated float velocity_list = 1;
+        repeated float acceleration_list = 2;
+    }
+    
+    optional Metrics metrics = 2;
+  }

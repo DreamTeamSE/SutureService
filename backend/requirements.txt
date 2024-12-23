@@ -5,3 +5,5 @@ httpx
 psycopg2-binary
 bcrypt
 python-dotenv
+grpcio
+grpcio-tools
