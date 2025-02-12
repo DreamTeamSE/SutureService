@@ -1,10 +1,7 @@
 from concurrent import futures
 import logging
+import requests
 
-import grpc
-
-from app.repository.control_device_pb2 import ControlRequest
-from app.repository.control_device_pb2_grpc import ControlDeviceStub
 
 
 
@@ -18,8 +15,15 @@ class DeviceRepository:
     
 
     def control_device(self, domain: str, control: str) -> dict:
-        print(domain)
-        with grpc.insecure_channel(domain) as channel:
-            stub = ControlDeviceStub(channel)
-            response = stub.Control(ControlRequest(control=control))
-            return {"message": response.message, "velocity_list": response.metrics.velocity_list, "acceleration_list": response.metrics.acceleration_list}
+
+        payload = {"control": control}
+        url = f"{domain}/control-device"
+        print(url)
+        response = requests.post(url, json=payload)
+
+        if response.status_code == 200:
+            data = response.json()
+            return {"message": data.get("message"), "velocity_list": data.get("velocity_list"), "acceleration_list": data.get("acceleration_list")}
+        else:
+            logging.error(f"Error controlling device: {response.status_code} - {response.text}")
+            return {"message": "Error controlling device"}

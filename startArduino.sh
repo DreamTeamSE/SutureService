@@ -1,0 +1,2 @@
+cd arduino
+./start.sh

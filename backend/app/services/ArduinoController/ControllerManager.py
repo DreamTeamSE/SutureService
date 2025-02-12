@@ -12,11 +12,11 @@ class ControllerManager:
 
     def __init__(self, device_repo : DeviceRepository) -> None:
         if not hasattr(self, 'deviceMap'):
-            self.deviceMap = dict({"123" : "host.docker.internal:50051"})
+            self.deviceMap = dict({"123" : "http://host.docker.internal:8080"})
         self.device_repo = device_repo
 
-    def control_device(self, domain : str, action : str):
-        return self.device_repo.control_device(domain, action)
+    def control_device(self, domain : str, control : str):
+        return self.device_repo.control_device(domain, control)
         
     
 

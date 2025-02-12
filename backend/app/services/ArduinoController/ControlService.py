@@ -19,22 +19,22 @@ class ControlService:
        
     def execute_control_action(self, control: ControlDTO) -> dict:
         device_domain = self._create_domain(control.device_id)
-        device_response = self.execute_given_device_domain(device_domain, control.action)
+        device_response = self.execute_given_device_domain(device_domain, control.control)
 
         if not device_response:
-            raise ValueError(f"While preforming this action {control.action}, An error occured while executing the action")
+            raise ValueError(f"While preforming this action {control.control}, An error occured while executing the action")
         
-        if control.action != "stop":
+        if control.control != "stop":
                 return device_response
         return self.handle_device_stopped(control.email, device_response)
    
 
     
 
-    def execute_given_device_domain(self, domain: str, action: str) -> dict:
+    def execute_given_device_domain(self, domain: str, control: str) -> dict:
         try:
 
-            response = self.controller_manager.control_device(domain, action)
+            response = self.controller_manager.control_device(domain, control)
             return response
         except httpx.HTTPStatusError as e:
             raise ValueError(f"Failed to Reach Device Address: {e.response.text}")

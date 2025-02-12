@@ -13,5 +13,5 @@ class DeviceStrategyFactory:
     }
 
     @classmethod
-    def getStrategy(cls, action: str) -> DeviceStrategy:
-        return cls._strategies.get(action) 
+    def getStrategy(cls, control: str) -> DeviceStrategy:
+        return cls._strategies.get(control) 
