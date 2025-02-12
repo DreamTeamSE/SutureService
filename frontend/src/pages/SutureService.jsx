@@ -3,7 +3,7 @@ import Button  from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 import StartSection from '../components/Home/StartSection';
-import SyncDevice from '../components/SutureService/SyncDevice copy';
+import SyncDevice from '../components/SutureService/SyncDevice';
 import ActiveService from '../components/SutureService/ActiveService/ActiveService';
 
 

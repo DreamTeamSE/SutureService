@@ -16,14 +16,12 @@ class DeviceRepository:
 
     def control_device(self, domain: str, control: str) -> dict:
 
-        payload = {"control": control}
-        url = f"{domain}/control-device"
+        url = f"{domain}/control-device/{control}"
         print(url)
-        response = requests.post(url, json=payload)
-
+        response = requests.post(url)
         if response.status_code == 200:
-            data = response.json()
-            return {"message": data.get("message"), "velocity_list": data.get("velocity_list"), "acceleration_list": data.get("acceleration_list")}
-        else:
-            logging.error(f"Error controlling device: {response.status_code} - {response.text}")
-            return {"message": "Error controlling device"}
+            return response
+        if response.status_code == 400:
+            raise ValueError("Data Error")
+        if response.status_code == 500:
+            raise Exception("Debug Application")

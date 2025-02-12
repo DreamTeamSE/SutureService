@@ -2,41 +2,34 @@ import Metrics from '../../DTOs/Metrics'
 
 const API_BASE_URL = import.meta.env.VITE_FASTAPI_IP;
 
-const unsubscribeDevice = async (deviceID, userID) => {
+const getRecentMetrics = async (device_id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/unsubscribe`, {
-        method: 'POST',
+    const response = await fetch(`${API_BASE_URL}/metric/get/recent/${device_id}`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            id: deviceID, 
-            userID: userID
-        })
+        }
     });
     const data = await response.json();
-    let velocity = new Metrics(data.velocity.top, data.velocity.average, data.velocity.errors, data.velocity.points);
-    let acceleration = new Metrics(data.acceleration.top, data.acceleration.average, data.acceleration.errors, data.acceleration.points);
-    return {acceleration, velocity};
-  } catch (error) {
+    console.log(data.metrics)
+    const metrics = data.metrics
+    const calculated_metrics = metrics.calculated_metrics
+
+    let velocity_metrics = new Metrics(calculated_metrics.top_velocity, calculated_metrics.average_velocity, 0, metrics.velocity_list)
+    let acceleration_metrics = new Metrics(calculated_metrics.top_acceleration, calculated_metrics.average_acceleration, 0, metrics.acceleration_list)
+
+    console.log(velocity_metrics, acceleration_metrics)
+    return {velocity : velocity_metrics, acceleration : acceleration_metrics};
     
-    console.error('Error fetching velocity data:', error);
-    return new Metrics(); // Return an empty Metrics object or provide default values
+  } catch (error) {
+    console.error('Error fetching metrics data:', error);
+    return { velocity: new Metrics(), acceleration: new Metrics() };
   }
 };
 
-
-
-const pullAcceleration = async (deviceID, userID) => {
-  let metrics = await unsubscribeDevice(deviceID, userID)
-  console.log(metrics.acceleration)
-  return metrics.acceleration
+const pullMetrics = async (device_id) => {
+  const metrics = await getRecentMetrics(device_id);
+  return metrics;
 };
 
-const pullVelocity = async (deviceID, userID) => {
-  let metrics = await unsubscribeDevice(deviceID, userID)
-  console.log(metrics.velocity)
-  return metrics.velocity
-};
-
-export { pullVelocity, pullAcceleration };
+export { pullMetrics };

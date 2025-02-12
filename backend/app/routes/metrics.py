@@ -16,38 +16,17 @@ def get_metric_dao(db: Database = Depends(get_db)) -> MetricDAO:
 def get_metrics_service(metric_dao: MetricDAO = Depends(get_metric_dao)) -> MetricsService:
     return MetricsService(metric_dao)
 
-
-@router.get("/get/recent")
+@router.get("/get/recent/{device_id}")
 def get_latest_metric(
-    email: str,
+    device_id: str,
     metric_service: MetricsService = Depends(get_metrics_service)
 ):
     try:
-        metric = metric_service.get_latest_metric(email)
-        if not metric:
-            return {"message": "Metric was empty", "metrics": metric}
-        return {"message": "Metric retrieved successfully", "metrics": metric}
+        metrics = metric_service.get_latest_metric(device_id)
+        return {"metrics": metrics}
     except ValueError as e:
         logging.error(e, exc_info=True)
         raise HTTPException(status_code=400, detail=f"Error Getting Latest Metric: {e}")
     except Exception as e:
         logging.error(e, exc_info=True)
         raise HTTPException(status_code=500, detail=f"Internal Server Error: {e}")
-
-@router.get("/get/all")
-def get_all_metrics(
-    email: str,
-    metric_service: MetricsService = Depends(get_metrics_service)
-):
-    try:
-        metrics = metric_service.get_all_metrics(email)
-        if not metrics:
-            logging.warning("Metrics were empty")
-            return {"message": "Metrics were empty", "metrics_list": metrics}
-        return {"message": "Metrics retrieved successfully", "metrics_list": metrics}
-    except ValueError as e:
-        logging.error(e, exc_info=True)
-        raise HTTPException(status_code=404, detail=f"Error Retrieving All Metrics : {e}")
-    except Exception as e:
-        logging.error(e, exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Internal Server Error : {e}")

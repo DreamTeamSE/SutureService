@@ -19,10 +19,10 @@ class MetricDAO:
         
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        query = "INSERT INTO metrics (email, velocity_list, acceleration_list, top_velocity, top_acceleration, average_velocity, average_acceleration) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        query = "INSERT INTO metrics (device_id, velocity_list, acceleration_list, top_velocity, top_acceleration, average_velocity, average_acceleration) VALUES (%s, %s, %s, %s, %s, %s, %s)"
 
         params = (
-            metric.email,
+            metric.device_id,
             metric.velocity_list,
             metric.acceleration_list,
             calculated_metrics.top_velocity,
@@ -40,27 +40,27 @@ class MetricDAO:
     def create_metric(self, row):
             calculated_metrics = CalculatedMetricsDTO(top_velocity=row[4], top_acceleration=row[4], average_velocity=row[5], average_acceleration=row[6]) 
             metric = MetricsDTO(
-                        email=row[0],
+                        device_id=row[0],
                         velocity_list=row[1],
                         acceleration_list=row[2],
                         calculated_metrics=calculated_metrics
                     )
             return metric
 
-    def get_latest_metric(self, email: str) -> MetricsDTO:
-        row = self.extract_latest_metric_from_db(email)
+    def get_latest_metric(self, device_id: str) -> MetricsDTO:
+        row = self.extract_latest_metric_from_db(device_id)
         if not row:
-            raise ValueError("Metrics Does Not Exist at Email")
+            raise ValueError("Metrics Does Not Exist at Device ID")
         return self.create_metric(row)
 
            
         
 
-    def extract_latest_metric_from_db(self, email : str) -> list:
+    def extract_latest_metric_from_db(self, device_id : str) -> list:
         conn = self.db.get_connection()
         cursor = conn.cursor()
-        query =  "SELECT email, velocity_list, acceleration_list, top_velocity, top_acceleration, average_velocity, average_acceleration FROM metrics WHERE email = %s ORDER BY timestamp DESC LIMIT 1"
-        params = (email,)
+        query =  "SELECT device_id, velocity_list, acceleration_list, top_velocity, top_acceleration, average_velocity, average_acceleration FROM metrics WHERE device_id = %s ORDER BY timestamp DESC LIMIT 1"
+        params = (device_id,)
         cursor.execute(query, params)
         row = cursor.fetchone()
         self.db.close_connection(conn)
@@ -76,11 +76,11 @@ class MetricDAO:
             metrics_list.append(metrics)
         return metrics_list
     
-    def get_all_metrics(self, email: str) -> list[MetricsDTO]:
+    def get_all_metrics(self, device_id: str) -> list[MetricsDTO]:
             conn = self.db.get_connection()
             cursor = conn.cursor()
-            query = "SELECT email, velocity_list, acceleration_list, top_velocity, top_acceleration, average_velocity, average_acceleration FROM metrics WHERE email = %s"
-            params = (email,)
+            query = "SELECT device_id, velocity_list, acceleration_list, top_velocity, top_acceleration, average_velocity, average_acceleration FROM metrics WHERE device_id = %s"
+            params = (device_id,)
             cursor.execute(query, params)
             rows = cursor.fetchall()
             self.db.close_connection(conn)

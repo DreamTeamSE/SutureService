@@ -13,4 +13,4 @@ class StartStrategy(DeviceStrategy):
         thread = Thread(target=device.run)
         thread.daemon = True
         thread.start()
-        return {"status": "Device started"}
+        return

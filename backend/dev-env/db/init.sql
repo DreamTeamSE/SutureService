@@ -14,7 +14,7 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 -- Create Metrics table
 CREATE TABLE metrics (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(255),
+    device_id VARCHAR(255),
     velocity_list DOUBLE PRECISION[],
     acceleration_list DOUBLE PRECISION[],
     top_velocity DOUBLE PRECISION,

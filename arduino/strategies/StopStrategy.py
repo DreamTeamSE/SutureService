@@ -10,4 +10,4 @@ class StopStrategy(DeviceStrategy):
         device.stop()
         metrics = device.getMetrics()
         device.newCache()
-        return {"message": "Successfully Stopped", "metrics" : metrics}
+        return {"metrics" : metrics}

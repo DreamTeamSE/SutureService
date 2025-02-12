@@ -41,8 +41,8 @@ def login(
     try:
         login_response = user_service.login(auth)
         if not login_response:
-            return {"message": "Login was not Successful"}
-        return {"message": "Login was successful"}
+            return
+        return
     except HTTPException as e:
         logging.error(e, exc_info=True)
         raise e

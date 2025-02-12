@@ -10,7 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - db_data:/var/lib/postgresql/data
+      - db_v1:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U admin -d suturedb"]
       interval: 5s
@@ -30,7 +30,7 @@ services:
       - app-net
 
 volumes:
-  db_data:
+  db_v1:
 
 networks:
   app-net:

@@ -29,22 +29,22 @@ class MetricsService():
             return calculated_metrics
            
 
-        def create_metrics(self, email : str, device_metric: DeviceMetricsDTO) -> MetricsDTO:
+        def create_metrics(self, device_id : str, device_metric: DeviceMetricsDTO) -> MetricsDTO:
             calculated_metrics = self.calculate_metrics(device_metric)
             metric = MetricsDTO(
-                email=email,
+                device_id=device_id,
                 velocity_list=device_metric.velocity_list,
                 acceleration_list=device_metric.acceleration_list,
                 calculated_metrics=calculated_metrics
             )
             return metric
             
-        def get_latest_metric(self, email : str) -> MetricsDTO:
-            metrics = self.metric_dao.get_latest_metric(email)
+        def get_latest_metric(self, device_id : str) -> MetricsDTO:
+            metrics = self.metric_dao.get_latest_metric(device_id)
             return metrics
             
-        def get_all_metrics(self, email : str) -> list[MetricsDTO]:
-            rows = MetricDAO.get_all_metrics(email)
+        def get_all_metrics(self, device_id : str) -> list[MetricsDTO]:
+            rows = MetricDAO.get_all_metrics(device_id)
             return rows    
             
             

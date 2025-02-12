@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Button  from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Container } from '@mui/material';
+import { start, stop } from '../../../helpers/ActiveServiceHelpers/deviceHelper';
 import StartComponent from './ActiveComponents/Metrics/StartComponent';
 import VelocityComponent from './ActiveComponents/Metrics/VelocityComponent';
 import AccelerationComponent from './ActiveComponents/Metrics/AccelerationComponent';
@@ -11,47 +12,46 @@ import EndComponent from './ActiveComponents/Metrics/EndComponent';
 import Status from '../../../DTOs/Status'
 import Chart from './ActiveComponents/Charts/Chart';
 import Metrics from '../../../DTOs/Metrics'
-import { pullAcceleration, pullVelocity } from '../../../helpers/ActiveServiceHelpers/metricsHelper';
+import { pullMetrics } from '../../../helpers/ActiveServiceHelpers/metricsHelper';
 
 const ActiveService = (props) => {
 
   const [selected, setSelected] = useState(Status.START)
 
   const [deviceID, setDeviceID] = useState(0)
-  const [userID, setUserID] = useState(0)
 
+  const [metrics, setMetrics] = useState({velocity : new Metrics(0,0,0,[]), acceleration : new Metrics(0,0,0,[])})
 
+  const [activeMetrics, setActiveMetrics] = useState(new Metrics(0, 0, 0, []))
 
-  let handleSelect = async (select) => {
-    await getMetrics(select)
-    setSelected(select)
+  const handleStart = (deviceID) => {
+    setDeviceID(deviceID)
+    setSelected(Status.STARTED)
+    start(deviceID)
   }
 
-  let handleStop = async () => {
-    await getMetrics(Status.VELOCITY)
+  const handleStop = async () => {
+    await stop(deviceID)
+    const newMetrics = await pullMetrics("123")
+    setMetrics(newMetrics)
+    setActiveMetrics(newMetrics.velocity)
     setSelected(Status.VELOCITY)
   }
 
-  let handleStart = (deviceID, userID) => {
-    setDeviceID(deviceID)
-    setUserID(userID)
-    setSelected(Status.STARTED)
+  const handleVelocity = async () => {
+    setSelected(Status.VELOCITY)
+    setActiveMetrics(metrics.velocity)
   }
 
-  
+  const handleAcceleration = async () => {
+    setSelected(Status.ACCELERATION)
+    setActiveMetrics(metrics.acceleration)
+  }
 
-  let getMetrics = async (selected) => {
-    let newMetrics = metrics
+  const handleSelect = async (select) => {
+    setSelected(select)
+  }
 
-    if (selected === Status.ACCELERATION) {
-      newMetrics = await pullAcceleration(deviceID, userID)
-    } else if (selected === Status.VELOCITY) {
-      newMetrics = await pullVelocity(deviceID, userID)
-    } 
-    setMetrics(newMetrics)
-}
-
-  const [metrics, setMetrics] = useState(new Metrics())
 
   return (
     <Box sx={{ 
@@ -78,10 +78,10 @@ const ActiveService = (props) => {
           <Button onClick={() => { handleSelect(Status.START) }}>
             Start
           </Button>
-          <Button onClick={() => { handleSelect(Status.VELOCITY) }}>
+          <Button onClick={() => { handleVelocity() }}>
             Velocity
           </Button>
-          <Button onClick={() => { handleSelect(Status.ACCELERATION) }}>
+          <Button onClick={() => { handleAcceleration() }}>
             Acceleration
           </Button>
           <Button onClick={() => { handleSelect(Status.RATING) }}>
@@ -90,8 +90,8 @@ const ActiveService = (props) => {
         </Box>
         {selected === Status.START && <StartComponent handleStart={handleStart} />}
         {selected === Status.STARTED && <EndComponent handleStop={handleStop} />}
-        {selected === Status.VELOCITY && <VelocityComponent metrics={metrics} />}
-        {selected === Status.ACCELERATION && <AccelerationComponent metrics={metrics} />}
+        {selected === Status.VELOCITY && <VelocityComponent metrics={activeMetrics} />}
+        {selected === Status.ACCELERATION && <AccelerationComponent metrics={activeMetrics} />}
         {selected === Status.RATING && <RatingComponent />}
       </Container>
       <Container sx={{ 
@@ -101,7 +101,7 @@ const ActiveService = (props) => {
         marginInline: '32px', 
         borderRadius: '16px' 
       }}>
-        <Chart metrics={metrics} selected={selected} />
+        <Chart metrics={activeMetrics} selected={selected} />
       </Container>
     </Box>
   )
