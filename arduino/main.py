@@ -1,48 +1,42 @@
-
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
+
 from strategies.DeviceStrategyFactory import DeviceStrategyFactory
+from exceptions.device_exceptions import InvalidDeviceStateException, InvalidControlException
 from Device.Device import Device
 import logging
 
 app = FastAPI()
 device = Device("123")
 
-class DeviceControl(BaseModel):
-    control: str
+def get_device() -> Device:
+    return device
 
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    logging.error("Unhandled Exception", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal Server Error, Debug Application"},
+    )
 
 @app.get("/")
 async def welcome():
-    return {"message" : "Hello World!"}
+    return {"message": "Hello World!"}
 
-
-
-@app.post("/control-device/")
-async def control_device_endpoint(device_action: DeviceControl):
+@app.post("/control-device/{action}")
+async def control_device(action: str):
     try:
-        print(device_action)
-        response = control_device(device_action)
-        message = response['message']
-        metrics = response.get('metrics', {})
-        print(metrics)
-        if not 'velocity_list' in metrics:
-            return {}
-        else:
-            return {"velocity_list": metrics['velocity_list'], "acceleration_list": metrics['acceleration_list']}
-    except HTTPException as e:
-        raise e  # Re-raises HTTP exceptions as they are
-    except Exception as e:
-        logging.error("Unhandled Exception", exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Unchecked Exception, Debug Software {e}")
-
-
-def control_device(device_action: DeviceControl):
-    strategy = DeviceStrategyFactory.getStrategy(device_action.control)
-    if not strategy:
-        raise HTTPException(status_code=400, detail="Invalid action: Action not recognized")
-    return strategy.execute(device)
-
+        strategy = DeviceStrategyFactory.getStrategy(action)
+        device = get_device()
+        return strategy.execute(device)
+    except InvalidDeviceStateException as e:
+        logging.warning(f"Invalid Device State: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid Device State: {e}")
+    except InvalidControlException as e:
+        logging.warning(f"Invalid Action: {e}")
+        raise HTTPException(status_code=400, detail=f"Invalid Device State: {e}")
 
 if __name__ == "__main__":
     import uvicorn
