@@ -4,29 +4,27 @@ from random import randint
 
 
 class MovementGenerator:
-    def generateVel():
+    def generate_vel(self):
         return round(randint(1, 10) + randint(0, 99) / 100, 2)
     
-    def generateAccel():
+    def generate_accel(self):
         return round(randint(1, 10) + randint(0, 99) / 100, 2)
     
-
-
-
-
 class Cache:
     def __init__(self):
-        self.newCache()
+        #  self.velocity_list = []
+        #  self.acceleration_list = []
+        self.new_cache()
 
-    def addToCache(self, vel, acc):
+    def add_to_cache(self, vel, acc):
         self.velocity_list.append(vel)
         self.acceleration_list.append(acc)
 
-    def newCache(self):
+    def new_cache(self):
         self.velocity_list = []
         self.acceleration_list = []
     
-    def getMetrics(self):
+    def get_metrics(self):
         metrics = {"velocity_list" : self.velocity_list, "acceleration_list" : self.acceleration_list}
         return metrics
 
@@ -49,23 +47,22 @@ class Device:
     def stop(self):
         self.is_running = False
 
-    def createMetrics(self):
-        randomVel = MovementGenerator.generateVel()
-        randomAcc = MovementGenerator.generateAccel()
-        return (randomVel, randomAcc)
+    def create_metrics(self):
+        random_vel = MovementGenerator.generate_vel()
+        random_acc = MovementGenerator.generate_accel()
+        return (random_vel, random_acc)
     
-    def getMetrics(self):
-        return self.cache.getMetrics()
+    def get_metrics(self):
+        return self.cache.get_metrics()
     
-    def newCache(self):
-        self.cache.newCache()
+    def new_cache(self):
+        self.cache.new_cache()
 
-    
     def run(self):
-        sleepVal = 1
+        sleep_val = 1
         while self.is_running:
-            randomVel, randomAcc = self.createMetrics()
-            self.cache.addToCache(randomVel, randomAcc)
+            random_vel, random_acc = self.create_metrics()
+            self.cache.add_to_cache(random_vel, random_acc)
             while self.is_paused and self.is_running:
-                sleep(sleepVal)
-            sleep(sleepVal)
+                sleep(sleep_val)
+            sleep(sleep_val)

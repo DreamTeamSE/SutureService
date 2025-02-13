@@ -18,7 +18,7 @@ class DeviceStrategyFactory:
     }
 
     @classmethod
-    def getStrategy(cls, control: str) -> DeviceStrategy:
+    def get_strategy(cls, control: str) -> DeviceStrategy:
         if control not in cls._strategies:
             raise InvalidControlException(f"Invalid action: '{control}' is not recognized")
         

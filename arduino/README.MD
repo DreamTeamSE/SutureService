@@ -1,11 +1,20 @@
-    ## Installation and Running the Application
+    ## Installation Guide
 
-    To install the necessary dependencies, run the following command:
+    ### Step 1: Set Up Virtual Environment
+    To set up the virtual environment, use the following commands:
     ```
-    pip install fastapi uvicorn
+    python3 -m venv venv
+    source venv/bin/activate
     ```
 
+    ### Step 2: Install Dependencies
+    To install the required dependencies, use the command:
+    ```
+    pip install -r requirements.txt
+    ```
+
+    ### Step 3: Start the Application
     To start the application, use the command:
     ```
-    uvicorn main:app --reload --port 8080
+    python main.py
     ```

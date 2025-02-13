@@ -10,9 +10,6 @@ import logging
 app = FastAPI()
 device = Device("123")
 
-def get_device() -> Device:
-    return device
-
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception):
     logging.error("Unhandled Exception", exc_info=True)
@@ -21,14 +18,19 @@ async def general_exception_handler(request: Request, exc: Exception):
         content={"detail": "Internal Server Error, Debug Application"},
     )
 
+def get_device() -> Device:
+    return device
+
 @app.get("/")
 async def welcome():
     return {"message": "Hello World!"}
 
-@app.post("/control-device/{action}")
+@app.post("/control-device/{action}", 
+          summary="Control the Device", 
+          description="Performs the specified action on the device based on the action provided in the URL")
 async def control_device(action: str):
     try:
-        strategy = DeviceStrategyFactory.getStrategy(action)
+        strategy = DeviceStrategyFactory.get_strategy(action)
         device = get_device()
         return strategy.execute(device)
     except InvalidDeviceStateException as e:
