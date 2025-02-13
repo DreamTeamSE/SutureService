@@ -17,6 +17,7 @@ def get_user_dao(db: Database = Depends(get_db)) -> UserDAO:
 def get_user_service(user_dao: UserDAO = Depends(get_user_dao)) -> UserService:
     return UserService(user_dao)
 
+
 @router.post("/signup")
 def signup(
     user: UserDTO,

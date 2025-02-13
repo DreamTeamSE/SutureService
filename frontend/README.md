@@ -1,8 +1,22 @@
-# React + Vite
+# Frontend Installation Guide
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Follow these steps to install and set up the frontend for SutureService:
 
-Currently, two official plugins are available:
+1. **Navigate to the frontend directory:**
+    ```sh
+    cd frontend
+    ```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+2. **Install the dependencies:**
+    ```sh
+    npm install
+    ```
+
+3. **Start the development server:**
+    ```sh
+    npm run dev
+    ```
+
+You have successfully set up the frontend for SutureService!
+
+You can now open the web app with the local address provided in the terminal!

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Button  from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Container } from '@mui/material';
@@ -7,7 +7,6 @@ import StartComponent from './ActiveComponents/Metrics/StartComponent';
 import VelocityComponent from './ActiveComponents/Metrics/VelocityComponent';
 import AccelerationComponent from './ActiveComponents/Metrics/AccelerationComponent';
 import RatingComponent from './ActiveComponents/Metrics/RatingComponent';
-import VelocityChart from './ActiveComponents/Charts/Chart';
 import EndComponent from './ActiveComponents/Metrics/EndComponent';
 import Status from '../../../DTOs/Status'
 import Chart from './ActiveComponents/Charts/Chart';

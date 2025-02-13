@@ -11,8 +11,8 @@ class ControllerManager:
         return cls._instance
 
     def __init__(self, device_repo : DeviceRepository) -> None:
-        if not hasattr(self, 'deviceMap'):
-            self.deviceMap = dict({"123" : "http://host.docker.internal:8080"})
+        if not hasattr(self, 'device_map'):
+            self.device_map = dict({"123" : "http://host.docker.internal:8080"})
         self.device_repo = device_repo
 
     def control_device(self, domain : str, control : str):
@@ -20,18 +20,17 @@ class ControllerManager:
         
     
 
-    def getAddr(self, id) -> str:
-        if id in self.deviceMap:
-            return self.deviceMap[id]
-        logging.warning(f"ID {id} not registered")
-        return ""
+    def get_addr(self, id) -> str:
+        if id not in self.device_map:
+            raise ValueError(f"ID {id} not registered")
+        return self.device_map[id]
         
     
     def register(self, id, address) -> None:
-        self.deviceMap[id] = address
+        self.device_map[id] = address
     
-    def deleteDevice(self, id) -> None:
-        if id in self.deviceMap:
-            del self.deviceMap[id]
+    def delete_device(self, id) -> None:
+        if id in self.device_map:
+            del self.device_map[id]
         else:
             logging.warning(f"Device with ID {id} not found in registry")

@@ -14,15 +14,18 @@ class ControlService:
         extracted_metrics = self._extract_device_metrics(device_metrics)
         user_metrics = self.metrics_service.create_metrics(device_id, extracted_metrics)
         self.metrics_service.save_metrics(user_metrics)
-        return {"message": "Metrics were Collected and Saved"}
     
        
     def execute_control_action(self, control: ControlDTO) -> dict:
-        device_domain = self._create_domain(control.device_id)
-        device_response = self.execute_given_device_domain(device_domain, control.control)
-        if control.control != "stop":
-            return device_response.json()
-        return self.handle_device_stopped(control.device_id, device_response)
+        action, device_id = control.control, control.device_id
+        device_map = self.controller_manager.device_map
+        if device_id not in device_map:
+            raise ValueError(f"ID {device_id} not registered")
+        device_domain = device_map[device_id]
+        device_response = self.execute_given_device_domain(device_domain, action)
+        if control.control == "stop":
+            logging.info("Metrics were Collected")
+            self.handle_device_stopped(device_id, device_response)    
    
 
     
@@ -32,14 +35,12 @@ class ControlService:
             response = self.controller_manager.control_device(domain, control)
             return response
         except httpx.HTTPStatusError as e:
-            raise ValueError(f"Failed to Reach Device Address: {e.response.text}")
+            raise httpx.HTTPStatusError(f"Failed to Reach Device Address: {e.response.text}")
 
-    def _create_domain(self, device_id : str) -> str:
-        address = self.controller_manager.getAddr(device_id)
-        return f"{address}"
+
 
     def _extract_device_metrics(self, device_response : dict) -> DeviceMetricsDTO:
-        metrics = device_response.json()["metrics"]
+        metrics = device_response["metrics"]
         velocity_list = metrics["velocity_list"]
         acceleration_list = metrics["acceleration_list"]
         return DeviceMetricsDTO(velocity_list=velocity_list, acceleration_list=acceleration_list)

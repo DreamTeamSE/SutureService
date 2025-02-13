@@ -9,7 +9,15 @@ from exceptions.device_exceptions import InvalidControlException
 
 
 
+
 class DeviceStrategyFactory:
+
+    """
+    DeviceStrategyFactory is a factory class that provides the appropriate strategy
+    based on the control action requested. It supports 'start', 'stop', 'pause', and 'resume' actions.
+
+    """
+
     _strategies = {
         "start": StartStrategy(),
         "stop": StopStrategy(),

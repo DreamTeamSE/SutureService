@@ -32,12 +32,12 @@ class UserService:
         return bcrypt.checkpw(password.encode(), queried_password.encode())
 
 
-    def delete_user(self, auth : AuthDTO) -> bool:
+    def delete_user(self, auth: AuthDTO) -> dict:
         if not self.user_dao._get_existing_email(auth.email):
             return {"message": f"No occurrence of {auth.email} in database, email was not deleted", "account_deleted": False}
         
         if not self.validate_password(auth):
-            return {"message": "Invalid password, account was not deleted", "account_deleted" : False}
+            return {"message": "Invalid password, account was not deleted", "account_deleted": False}
         return self.user_dao.delete_user(auth.email)
     
     

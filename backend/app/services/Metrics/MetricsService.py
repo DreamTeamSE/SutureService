@@ -50,3 +50,4 @@ class MetricsService():
             
         def save_metrics(self, user_metrics : MetricsDTO) -> None:
             self.metric_dao.insert_metric_into_db(user_metrics)
+            logging.info("Metrics were Saved")

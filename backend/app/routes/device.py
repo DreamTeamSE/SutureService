@@ -7,7 +7,10 @@ from app.DAOs.MetricDAO import MetricDAO
 from app.services.Metrics.MetricsService import MetricsService
 from app.db.Database import Database
 from app.repository.DeviceRepository import DeviceRepository
+import httpx
 router = APIRouter(prefix="/device", tags=["device"])
+
+
 
 def get_db():
     return Database()
@@ -35,10 +38,15 @@ def control_action(
     control_service: ControlService = Depends(get_control_service)
 ):
     try:
-        return control_service.execute_control_action(control)
+        logging.info(f"Performing Action '{control.control}' on '{control.device_id}'")
+        control_service.execute_control_action(control)
+        logging.info(f"Finished Action '{control.control}' on '{control.device_id}'")
     except ValueError as e:
         logging.error(e, exc_info=True)
-        raise HTTPException(status_code=400, detail=f"Error Controlling Device : {e}")
+        raise HTTPException(status_code=e.response.status_code, detail=f"Error Controlling Device: {str(e)}")
+    except httpx.HTTPStatusError as e:
+        logging.error(e, exc_info=True)
+        raise HTTPException(status_code=e.response.status_code, detail=f"Error Accessing Arduino at provided Address: {e.response.text}")
     except Exception as e:
         logging.error(e, exc_info=True)
-        raise HTTPException(status_code=500, detail=f"Internal Server Error : {e}")
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}, Debug Application Manually")

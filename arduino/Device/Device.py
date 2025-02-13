@@ -4,13 +4,27 @@ from random import randint
 
 
 class MovementGenerator:
-    def generate_vel(self):
+
+    """
+    This class is responsible for generating random movement data for the device. 
+    It provides methods to generate random velocity and acceleration values, which can be used to simulate device movement.
+    """
+
+    @staticmethod
+    def generate_vel():
         return round(randint(1, 10) + randint(0, 99) / 100, 2)
     
-    def generate_accel(self):
+    @staticmethod
+    def generate_accel():
         return round(randint(1, 10) + randint(0, 99) / 100, 2)
     
 class Cache:
+
+    """
+    The Cache class serves as a temporary storage for velocity and acceleration data. 
+    It allows adding new data points and resetting the stored data to its initial state. 
+    This class is essential for managing session data during device operation.
+    """
     def __init__(self):
         #  self.velocity_list = []
         #  self.acceleration_list = []
@@ -29,6 +43,13 @@ class Cache:
         return metrics
 
 class Device:
+
+    """
+    The Device class models a device capable of collecting movement data. 
+    It can start, stop, pause, and resume data collection, and it uses a Cache to store the collected metrics. 
+    This class integrates various components to simulate a device in operation.
+    """
+       
     def __init__(self, id):
         self.is_running = False
         self.is_paused = False
