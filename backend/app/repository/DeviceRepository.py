@@ -20,8 +20,10 @@ class DeviceRepository:
         print(url)
         response = requests.post(url)
         if response.status_code == 200:
-            return response
-        if response.status_code == 400:
-            raise ValueError("Data Error")
-        if response.status_code == 500:
+            return response.json()
+        elif response.status_code == 400:
+            raise ValueError("Input Error")
+        elif response.status_code == 500:
             raise Exception("Debug Application")
+        else:
+            response.raise_for_status()
