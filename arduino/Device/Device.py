@@ -42,7 +42,7 @@ class MovementGenerator:
     
     @staticmethod
     def fixed_velocity() -> list[DeviceMetrics]:
-        address = f"http://frekmf.com"
+        address = f"http://172.20.10.11:80/start"
         try:
             response = requests.get(address)
             response.raise_for_status()
