@@ -3,6 +3,7 @@ from .StopStrategy import StopStrategy
 from .PauseStrategy import PauseStrategy
 from .ResumeStrategy import ResumeStrategy
 from .DeviceStrategy import DeviceStrategy
+from .FixedStrategy import FixedStrategy
 from fastapi import HTTPException
 from exceptions.device_exceptions import InvalidControlException
 
@@ -22,7 +23,8 @@ class DeviceStrategyFactory:
         "start": StartStrategy(),
         "stop": StopStrategy(),
         "pause": PauseStrategy(),
-        "resume": ResumeStrategy()
+        "resume": ResumeStrategy(),
+        "fixed": FixedStrategy()
     }
 
     @classmethod

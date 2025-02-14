@@ -1,8 +1,18 @@
 import logging
 from time import sleep
+import requests
+import math
 from random import randint
 
 
+
+class DeviceMetrics:
+    def __init__(self, time, x_vel, y_vel, z_vel):
+        self.time = time
+        self.x_vel = x_vel
+        self.y_vel = y_vel
+        self.z_vel = z_vel
+    
 class MovementGenerator:
 
     """
@@ -18,6 +28,32 @@ class MovementGenerator:
     def generate_accel():
         return round(randint(1, 10) + randint(0, 99) / 100, 2)
     
+
+    @staticmethod
+    def generate_dummy_velocity_list() -> list:
+        velocity_list = []
+        for t in range(0, 10001, 100):
+            time = t / 1000.0
+            x_vel = MovementGenerator.generate_vel()
+            y_vel = MovementGenerator.generate_vel()
+            z_vel = MovementGenerator.generate_vel()
+            velocity_list.append(DeviceMetrics(time, x_vel, y_vel, z_vel))
+        return velocity_list
+    
+    @staticmethod
+    def fixed_velocity() -> list[DeviceMetrics]:
+        address = f"http://frekmf.com"
+        try:
+            response = requests.get(address)
+            response.raise_for_status()
+            return response.json()["metrics"]
+        except requests.HTTPError as e:
+            logging.error(f"HTTP error occurred: {e.response.text}")
+            return MovementGenerator.generate_dummy_velocity_list()
+        except Exception as e:
+            logging.error(f"An error occurred: {str(e)}")
+            return MovementGenerator.generate_dummy_velocity_list()
+    
 class Cache:
 
     """
@@ -25,6 +61,7 @@ class Cache:
     It allows adding new data points and resetting the stored data to its initial state. 
     This class is essential for managing session data during device operation.
     """
+
     def __init__(self):
         #  self.velocity_list = []
         #  self.acceleration_list = []
@@ -72,6 +109,12 @@ class Device:
         random_vel = MovementGenerator.generate_vel()
         random_acc = MovementGenerator.generate_accel()
         return (random_vel, random_acc)
+    
+    def create_fixed_metrics(self):
+        fixed_velocity_list = MovementGenerator.fixed_velocity()
+        vector_velocity_list = [(v.time, math.sqrt(v.x_vel**2 + v.y_vel**2 + v.z_vel**2)) for v in fixed_velocity_list]
+
+        return (fixed_velocity_list, vector_velocity_list)
     
     def get_metrics(self):
         return self.cache.get_metrics()
