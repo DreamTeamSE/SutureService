@@ -1,3 +1,3 @@
 cd ..
-cd arduino
+cd arduino_manager
 ./start.sh
