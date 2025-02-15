@@ -3,7 +3,8 @@ from time import sleep
 import requests
 import math
 from random import randint
-
+import csv
+from io import StringIO
 
 
 class DeviceMetrics:
@@ -37,21 +38,30 @@ class MovementGenerator:
             x_vel = MovementGenerator.generate_vel()
             y_vel = MovementGenerator.generate_vel()
             z_vel = MovementGenerator.generate_vel()
-            velocity_list.append(DeviceMetrics(time, x_vel, y_vel, z_vel))
+            velocity_list.append([time, x_vel, y_vel, z_vel])
         return velocity_list
     
     @staticmethod
-    def fixed_velocity() -> list[DeviceMetrics]:
-        address = f"http://172.20.10.11:80/start"
+    def handle_resposne(response) -> list:
+            response_text = response["text"]
+            csv_file = StringIO(response_text)
+            reader = csv.reader(csv_file)
+            return list(reader)
+    
+    @staticmethod
+    def fixed_velocity() -> list:
+        address = f"htp://172.20.10.1:80/start"
         try:
             response = requests.get(address)
             response.raise_for_status()
-            return response.json()["metrics"]
+            csv_file = MovementGenerator.handle_resposne(response)
+            return csv_file
+
         except requests.HTTPError as e:
             logging.error(f"HTTP error occurred: {e.response.text}")
             return MovementGenerator.generate_dummy_velocity_list()
         except Exception as e:
-            logging.error(f"An error occurred: {str(e)}")
+            logging.error(f"Debug Application: {str(e)}")
             return MovementGenerator.generate_dummy_velocity_list()
     
 class Cache:
@@ -110,11 +120,11 @@ class Device:
         random_acc = MovementGenerator.generate_accel()
         return (random_vel, random_acc)
     
-    def create_fixed_metrics(self):
+    def create_fixed_metrics(self) -> tuple:
         fixed_velocity_list = MovementGenerator.fixed_velocity()
-        vector_velocity_list = [(v.time, math.sqrt(v.x_vel**2 + v.y_vel**2 + v.z_vel**2)) for v in fixed_velocity_list]
+        velocity_magnitude_list = [(v[0], math.sqrt(v[1]**2 + v[2]**2 + v[3]**2)) for v in fixed_velocity_list]
 
-        return (fixed_velocity_list, vector_velocity_list)
+        return (velocity_magnitude_list, velocity_magnitude_list)
     
     def get_metrics(self):
         return self.cache.get_metrics()

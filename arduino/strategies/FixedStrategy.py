@@ -14,7 +14,7 @@ class FixedStrategy(DeviceStrategy):
     Once the device is started, it runs in a separate thread to continuously generate and cache metrics for 10 seconds.
     """
 
-    def execute(self, device: Device) -> dict:
+    def execute(self, device: Device) -> tuple:
         if device.is_running:
             raise InvalidDeviceStateException("Device is already running")
         return device.create_fixed_metrics()
