@@ -1,17 +1,32 @@
-name: Production Build
+name: Staging Build
 
 on:
   pull_request:
     branches:
       - staging
+  push:
+    branches:
+      - staging
 
 jobs:
-  hello-world:
+  build-and-push:
+
+    permissions:
+      contents: read
+      packages: write
+
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Hello World
-      run: echo "Hello, World!"
+      - name: Build and Push Images
+        run: |
+          docker build -t ghcr.io/dreamteamse/sutureservice-arduino-manager:staging ./arduino_manager/.
+          docker build -t ghcr.io/dreamteamse/sutureservice-backend:staging ./backend/.
+          docker build -t ghcr.io/dreamteamse/sutureservice-frontend:staging ./frontend/.
+
+          docker push ghcr.io/dreamteamse/sutureservice-arduino-manager:staging
+          docker push ghcr.io/dreamteamse/sutureservice-backend:staging
+          docker push ghcr.io/dreamteamse/sutureservice-frontend:staging

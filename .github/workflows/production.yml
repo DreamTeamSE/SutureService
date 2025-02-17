@@ -4,14 +4,27 @@ on:
   pull_request:
     branches:
       - production
+  push:
+    branches:
+      - production
 
 jobs:
-  hello-world:
+  build-and-push:
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Hello World
-      run: echo "Hello, World!"
+      - name: Build and Push Images
+        run: |
+          docker build -t ghcr.io/dreamteamse/sutureservice-arduino-manager:production ./arduino_manager/.
+          docker build -t ghcr.io/dreamteamse/sutureservice-backend:production ./backend/.
+          docker build -t ghcr.io/dreamteamse/sutureservice-frontend:production ./frontend/.
+
+          docker push ghcr.io/dreamteamse/sutureservice-arduino-manager:production
+          docker push ghcr.io/dreamteamse/sutureservice-backend:production
+          docker push ghcr.io/dreamteamse/sutureservice-frontend:production

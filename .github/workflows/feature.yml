@@ -7,6 +7,9 @@ on:
 
 jobs:
   build-and-push:
+    permissions:
+      contents: read
+      packages: write
     runs-on: ubuntu-latest
 
     steps:
@@ -15,7 +18,7 @@ jobs:
 
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-        
+
       - name: Build and Push Images
         run: |
           docker build -t ghcr.io/dreamteamse/sutureservice-arduino-manager:dev ./arduino_manager/.
