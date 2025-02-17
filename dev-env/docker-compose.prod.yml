@@ -18,14 +18,31 @@ services:
       retries: 5
     networks:
       - app-net
-  app:
-    image: app
-    container_name: app
+  backend:
+    image: SutureService/backend/prod:latest
+    container_name: suture_service_backend
     depends_on:
       db:
         condition: service_healthy
     ports:
       - "8000:8000"
+    networks:
+      - app-net
+  arduino_manager:
+    image: SutureService/arduino_manager/prod:latest
+    container_name: arduino_manager
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - app-net
+  frontend:
+    image: SutureService/frontend/prod:latest
+    container_name: suture_service_frontend
+    ports:
+      - "80:80"
     networks:
       - app-net
 
