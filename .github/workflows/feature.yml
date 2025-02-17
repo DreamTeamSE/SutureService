@@ -19,26 +19,20 @@ jobs:
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
-      - name: Build Docker Images
-        run: |
-          docker build -t ghcr.io/dreamteamse/sutureservice-arduino-manager:dev ./arduino_manager/.
-          docker build -t ghcr.io/dreamteamse/sutureservice-backend:dev ./backend/.
-          docker build -t ghcr.io/dreamteamse/sutureservice-frontend:dev ./frontend/.
+      - name: Build Arduino Manager Docker Image
+        run: docker build -t ghcr.io/dreamteamse/sutureservice-arduino-manager:dev ./arduino_manager/.
 
-  push:
-    runs-on: ubuntu-latest
+      - name: Push Arduino Manager Docker Image
+        run: docker push ghcr.io/dreamteamse/sutureservice-arduino-manager:dev
 
-    permissions:
-      packages: write
+      - name: Build Backend Docker Image
+        run: docker build -t ghcr.io/dreamteamse/sutureservice-backend:dev ./backend/.
 
-    needs: build
+      - name: Push Backend Docker Image
+        run: docker push ghcr.io/dreamteamse/sutureservice-backend:dev
 
-    steps:
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+      - name: Build Frontend Docker Image
+        run: docker build -t ghcr.io/dreamteamse/sutureservice-frontend:dev ./frontend/.
 
-      - name: Push Docker Images
-        run: |
-          docker push ghcr.io/dreamteamse/sutureservice-arduino-manager:dev
-          docker push ghcr.io/dreamteamse/sutureservice-backend:dev
-          docker push ghcr.io/dreamteamse/sutureservice-frontend:dev
+      - name: Push Frontend Docker Image
+        run: docker push ghcr.io/dreamteamse/sutureservice-frontend:dev
