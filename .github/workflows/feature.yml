@@ -1,4 +1,4 @@
-name: Feature Build
+name: Feature
 
 on:
   push:
@@ -6,12 +6,12 @@ on:
       - feature-*
 
 jobs:
-  hello-world:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Hello World
-      run: echo "Hello, World!"
+    - name: Build Suture Service Backend
+      run: docker build -t SutureService/${{ github.ref_name }}:v1 .

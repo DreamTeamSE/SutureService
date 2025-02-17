@@ -1,4 +1,4 @@
-name: Production Build
+name: Production
 
 on:
   pull_request:
@@ -6,12 +6,12 @@ on:
       - production
 
 jobs:
-  hello-world:
+  build:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Hello World
-      run: echo "Hello, World!"
+    - name: Build Suture Service Backend
+      run: docker build -t SutureService/production:v1 .
