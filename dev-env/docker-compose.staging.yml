@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:15
+    container_name: postgresdb
+    environment:
+      POSTGRES_DB: suturedb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_v1:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d suturedb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
+  backend:
+    image: ghcr.io/dreamteamse/sutureservice-backend:staging
+    container_name: backend
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    networks:
+      - app-net
+  arduino_manager:
+    image: ghcr.io/dreamteamse/sutureservice-arduino-manager:staging
+    container_name: arduino_manager
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    networks:
+      - app-net
+  frontend:
+    image: ghcr.io/dreamteamse/sutureservice-frontend:staging
+    container_name: frontend
+    ports:
+      - "80:80"
+    networks:
+      - app-net
+
+volumes:
+  db_v1:
+
+networks:
+  app-net:
