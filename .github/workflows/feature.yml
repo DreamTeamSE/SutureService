@@ -14,13 +14,13 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+        run: echo "${secrets.GITHUB_TOKEN}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
       - name: Build and Push Images
         run: |
-          docker build -t ghcr.io/dreamteamse/sutureservice-arduino-manager:dev ../arduino_manager/.
-          docker build -t ghcr.io/dreamteamse/sutureservice-backend:dev ../backend/.
-          docker build -t ghcr.io/dreamteamse/sutureservice-frontend:dev ../frontend/.
+          docker build -t ghcr.io/dreamteamse/sutureservice-arduino-manager:dev ./arduino_manager/.
+          docker build -t ghcr.io/dreamteamse/sutureservice-backend:dev ./backend/.
+          docker build -t ghcr.io/dreamteamse/sutureservice-frontend:dev ./frontend/.
 
           docker push ghcr.io/dreamteamse/sutureservice-arduino-manager:dev
           docker push ghcr.io/dreamteamse/sutureservice-backend:dev
