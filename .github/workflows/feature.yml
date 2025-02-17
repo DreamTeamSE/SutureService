@@ -1,0 +1,39 @@
+name: Feature CI/CD
+
+on:
+  push:
+    branches:
+      - feature-*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: Build Arduino Manager Docker Image
+        run: docker build -t ghcr.io/dreamteamse/sutureservice-arduino-manager:dev ./arduino_manager/.
+
+      - name: Push Arduino Manager Docker Image
+        run: docker push ghcr.io/dreamteamse/sutureservice-arduino-manager:dev
+
+      - name: Build Backend Docker Image
+        run: docker build -t ghcr.io/dreamteamse/sutureservice-backend:dev ./backend/.
+
+      - name: Push Backend Docker Image
+        run: docker push ghcr.io/dreamteamse/sutureservice-backend:dev
+
+      - name: Build Frontend Docker Image
+        run: docker build -t ghcr.io/dreamteamse/sutureservice-frontend:dev ./frontend/.
+
+      - name: Push Frontend Docker Image
+        run: docker push ghcr.io/dreamteamse/sutureservice-frontend:dev
