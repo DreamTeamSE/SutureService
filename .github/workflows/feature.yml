@@ -1,4 +1,4 @@
-name: Feature Build
+name: Feature CI/CD
 
 on:
   push:
@@ -6,12 +6,22 @@ on:
       - feature-*
 
 jobs:
-  hello-world:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Hello World
-      run: echo "Hello, World!"
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: Build and Push Images
+        run: |
+          docker build -t ghcr.io/dreamteamse/sutureservice-arduino-manager:dev ../arduino_manager/.
+          docker build -t ghcr.io/dreamteamse/sutureservice-backend:dev ../backend/.
+          docker build -t ghcr.io/dreamteamse/sutureservice-frontend:dev ../frontend/.
+
+          docker push ghcr.io/dreamteamse/sutureservice-arduino-manager:dev
+          docker push ghcr.io/dreamteamse/sutureservice-backend:dev
+          docker push ghcr.io/dreamteamse/sutureservice-frontend:dev
