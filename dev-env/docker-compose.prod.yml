@@ -19,8 +19,8 @@ services:
     networks:
       - app-net
   backend:
-    image: ghcr.io/dreamteamse/sutureservice-backend:prod
-    container_name: backend
+    image: SutureService/backend/prod:latest
+    container_name: suture_service_backend
     depends_on:
       db:
         condition: service_healthy
@@ -29,7 +29,7 @@ services:
     networks:
       - app-net
   arduino_manager:
-    image: ghcr.io/dreamteamse/sutureservice-arduino-manager:prod
+    image: SutureService/arduino_manager/prod:latest
     container_name: arduino_manager
     depends_on:
       db:
@@ -39,8 +39,8 @@ services:
     networks:
       - app-net
   frontend:
-    image: ghcr.io/dreamteamse/sutureservice-frontend:prod
-    container_name: frontend
+    image: SutureService/frontend/prod:latest
+    container_name: suture_service_frontend
     ports:
       - "80:80"
     networks:
