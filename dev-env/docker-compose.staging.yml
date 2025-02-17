@@ -19,7 +19,7 @@ services:
     networks:
       - app-net
   backend:
-    image: ghcr.io/dreamteamse/sutureservice-backend:prod
+    image: ghcr.io/dreamteamse/sutureservice-backend:staging
     container_name: backend
     depends_on:
       db:
@@ -29,7 +29,7 @@ services:
     networks:
       - app-net
   arduino_manager:
-    image: ghcr.io/dreamteamse/sutureservice-arduino-manager:prod
+    image: ghcr.io/dreamteamse/sutureservice-arduino-manager:staging
     container_name: arduino_manager
     depends_on:
       db:
@@ -39,7 +39,7 @@ services:
     networks:
       - app-net
   frontend:
-    image: ghcr.io/dreamteamse/sutureservice-frontend:prod
+    image: ghcr.io/dreamteamse/sutureservice-frontend:staging
     container_name: frontend
     ports:
       - "80:80"
